@@ -111,6 +111,20 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
 
+const authMiddleware = t.middleware(async ({ next, ctx }) => {
+  if (!ctx.session?.user) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+    });
+  }
+
+  return next({
+    ctx: {
+      session: { ...ctx.session, user: ctx.session.user },
+    },
+  });
+});
+
 /**
  * Protected (authenticated) procedure
  *
@@ -121,14 +135,29 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
  */
 export const protectedProcedure = t.procedure
   .use(timingMiddleware)
-  .use(({ ctx, next }) => {
-    if (!ctx.session?.user) {
-      throw new TRPCError({ code: "UNAUTHORIZED" });
+  .use(authMiddleware);
+
+export const orgProtectedProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(authMiddleware)
+  .use(async ({ ctx, next }) => {
+    const {
+      session: { session },
+    } = ctx;
+
+    if (!session.activeOrganizationId) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "No active household",
+      });
     }
+
     return next({
       ctx: {
-        // infers the `session` as non-nullable
-        session: { ...ctx.session, user: ctx.session.user },
+        session: {
+          ...session,
+          activeOrganizationId: session.activeOrganizationId,
+        },
       },
     });
   });
