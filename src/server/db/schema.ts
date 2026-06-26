@@ -9,23 +9,61 @@ import { createId } from "@paralleldrive/cuid2";
 
 export const createTable = pgTableCreator((name) => `padpal_${name}`);
 
-export const expenses = createTable("expense", (d) => ({
-  id: d
-    .text()
-    .primaryKey()
-    .$defaultFn(() => createId()),
-  orgId: d.text().references(() => organization.id, { onDelete: "cascade" }),
-  userId: d.text().references(() => user.id, { onDelete: "set null" }),
-  name: d.text().notNull(),
-  isShared: d.boolean().notNull().default(false),
-  amount: d.bigint({ mode: "number" }).notNull(),
-  createdAt: d.timestamp({ withTimezone: true }).defaultNow().notNull(),
-  updatedAt: d
-    .timestamp({ withTimezone: true })
-    .defaultNow()
-    .$onUpdateFn(() => new Date())
-    .notNull(),
-}));
+export const expenseCategory = pgEnum("expense_category", [
+  "housing", // rent, mortgage
+
+  "utilities", // electric, water, gas, internet, phone
+
+  "groceries",
+  "dining",
+
+  "transportation", // gas, parking, transit
+  "vehicle", // car payment, maintenance, registration
+
+  "insurance", // car, renters, health
+
+  "debt", // student loans, credit cards, personal loans
+
+  "subscriptions", // Netflix, Spotify, ChatGPT, gym
+
+  "shopping", // clothes, household
+
+  "healthcare",
+
+  "entertainment",
+
+  "other",
+]);
+
+export const expenses = createTable(
+  "expense",
+  (d) => ({
+    id: d
+      .text()
+      .primaryKey()
+      .$defaultFn(() => createId()),
+    orgId: d.text().references(() => organization.id, { onDelete: "cascade" }),
+    userId: d.text().references(() => user.id, { onDelete: "set null" }),
+    name: d.text().notNull(),
+    isShared: d.boolean().notNull().default(false),
+    amount: d.bigint({ mode: "number" }).notNull(),
+    category: expenseCategory().notNull(),
+    createdAt: d.timestamp({ withTimezone: true }).defaultNow().notNull(),
+    updatedAt: d
+      .timestamp({ withTimezone: true })
+      .defaultNow()
+      .$onUpdateFn(() => new Date())
+      .notNull(),
+  }),
+  (table) => [
+    index("expense_org_id_idx").on(table.orgId),
+    index("expense_user_id_idx").on(table.userId),
+    index("expense_category_idx").on(table.category),
+  ],
+);
+
+export type Expense = typeof expenses.$inferSelect;
+export type ExpenseInput = typeof expenses.$inferInsert;
 
 export const user = createTable("user", (d) => ({
   id: d.text("id").primaryKey(),

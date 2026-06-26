@@ -7,6 +7,7 @@ import { TRPCReactProvider } from "@/trpc/react";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -25,12 +26,24 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={cn(geist.variable, "font-sans", inter.variable)}>
+    <html
+      lang="en"
+      className={cn(geist.variable, "font-sans", inter.variable)}
+      suppressHydrationWarning
+    >
       <body>
         <TRPCReactProvider>
-          <TooltipProvider>{children}</TooltipProvider>
+          <ThemeProvider
+            attribute={"class"}
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <TooltipProvider>{children}</TooltipProvider>
+
+            <Toaster />
+          </ThemeProvider>
         </TRPCReactProvider>
-        <Toaster />
       </body>
     </html>
   );

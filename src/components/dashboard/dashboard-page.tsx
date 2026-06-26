@@ -3,6 +3,7 @@ import { Fragment } from "react/jsx-runtime";
 import { SidebarTrigger } from "../ui/sidebar";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
+import { ThemeToggle } from "../elements/theme-toggle";
 
 interface DashboardPageProps {
   title?: string;
@@ -21,6 +22,7 @@ export function DashboardPage({ title, children }: DashboardPageProps) {
           />
           <h1 className="text-base font-medium">{title || "Dashboard"}</h1>
           <div className="ml-auto flex items-center gap-2">
+            <ThemeToggle />
             <Button
               variant="ghost"
               asChild
