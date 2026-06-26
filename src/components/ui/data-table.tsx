@@ -1,6 +1,4 @@
 "use client";
-
-import * as React from "react";
 import {
   type ColumnDef,
   flexRender,
@@ -26,16 +24,16 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  // ✅ stabilize data to prevent SSR/client divergence
-  const safeData = React.useMemo(() => data ?? [], [data]);
+  "use no memo";
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
-    data: safeData,
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
-  const isEmpty = safeData.length === 0;
+  const isEmpty = data.length === 0;
 
   return (
     <div className="overflow-hidden rounded-md border">

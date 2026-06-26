@@ -98,7 +98,7 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
         e.preventDefault();
         e.stopPropagation();
 
-        form.handleSubmit();
+        void form.handleSubmit();
       }}
     >
       <FieldGroup>

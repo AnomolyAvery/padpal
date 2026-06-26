@@ -56,8 +56,8 @@ export function HouseholdSwitcher() {
             <DropdownMenuLabel className="text-muted-foreground text-xs">
               Households
             </DropdownMenuLabel>
-            {households?.map((household, index) => (
-              <DropdownMenuItem key={household.name} className="gap-2 p-2">
+            {households?.map((household) => (
+              <DropdownMenuItem key={household.id} className="gap-2 p-2">
                 <Avatar>
                   <AvatarFallback>
                     {household.name.substring(0, 2)}

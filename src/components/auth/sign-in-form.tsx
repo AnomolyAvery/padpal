@@ -57,7 +57,7 @@ export function SignInForm() {
           e.stopPropagation();
 
           setError(null);
-          form.handleSubmit();
+          void form.handleSubmit();
         }}
       >
         <FieldGroup>

@@ -47,7 +47,7 @@ export function OnboardingForm() {
         e.stopPropagation();
 
         setError(null);
-        form.handleSubmit();
+        void form.handleSubmit();
       }}
     >
       <FieldGroup>

@@ -13,7 +13,7 @@ interface TextFieldProps {
 export function TextField({
   label,
   placeholder,
-  type = "text",
+  type,
   asNumber = false,
 }: TextFieldProps) {
   const field = useFieldContext<string | number>();
@@ -40,9 +40,7 @@ export function TextField({
           }
         }}
         onChange={(e) => {
-          field.handleChange(
-            asNumber ? (e.target.value as never) : e.target.value,
-          );
+          field.handleChange(asNumber ? e.target.value : e.target.value);
         }}
         aria-invalid={isInvalid}
       />
