@@ -1,6 +1,8 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import tseslint from "typescript-eslint";
+
+// @ts-ignore
 import drizzle from "eslint-plugin-drizzle";
 
 export default defineConfig([
