@@ -1,5 +1,5 @@
 import { DashboardPage } from "@/components/dashboard/dashboard-page";
-import { ExpenseSheet } from "@/components/dashboard/expenses/expense-sheet";
+import { ExpenseSheetDrawer } from "@/components/dashboard/expenses/expense-sheet-drawer";
 import { ExpensesOverview } from "@/components/dashboard/expenses/expenses-overview";
 import { ExpensesTable } from "@/components/dashboard/expenses/expenses-table";
 import { Button } from "@/components/ui/button";
@@ -33,12 +33,12 @@ export default async function Page() {
             <CardTitle>Manage Expenses</CardTitle>
             <CardDescription>View and manage your expenses.</CardDescription>
             <CardAction>
-              <ExpenseSheet>
+              <ExpenseSheetDrawer>
                 <Button>
                   <IconPlus />
                   Add Expense
                 </Button>
-              </ExpenseSheet>
+              </ExpenseSheetDrawer>
             </CardAction>
           </CardHeader>
           <CardContent>

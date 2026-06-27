@@ -21,7 +21,7 @@ import {
 } from "@tabler/icons-react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { toast } from "sonner";
-import { ExpenseSheet } from "./expense-sheet";
+import { ExpenseSheetDrawer } from "./expense-sheet-drawer";
 import { formatCurrency } from "@/lib/currency";
 import {
   Tooltip,
@@ -153,7 +153,7 @@ function ExpenseRowActions({ expense }: { expense: Expense }) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <ExpenseSheet expense={expense}>
+          <ExpenseSheetDrawer expense={expense}>
             <DropdownMenuItem
               onSelect={(e) => {
                 e.preventDefault();
@@ -163,7 +163,7 @@ function ExpenseRowActions({ expense }: { expense: Expense }) {
               <IconPencil />
               Edit
             </DropdownMenuItem>
-          </ExpenseSheet>
+          </ExpenseSheetDrawer>
 
           <DropdownMenuItem onClick={onToggleShared} disabled={isUpdating}>
             {expense.isShared ? <IconToggleRightFilled /> : <IconToggleLeft />}

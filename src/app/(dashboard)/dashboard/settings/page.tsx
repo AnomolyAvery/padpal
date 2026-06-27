@@ -1,5 +1,5 @@
 import { DashboardPage } from "@/components/dashboard/dashboard-page";
-import { InviteMemberSheet } from "@/components/dashboard/members/invite-member-sheet";
+import { InviteMemberSheetDrawer } from "@/components/dashboard/members/invite-member-sheet-drawer";
 import { MemberList } from "@/components/dashboard/members/member-list";
 import {
   Card,
@@ -20,7 +20,7 @@ export default function Page() {
             Add and manage members to your household
           </CardDescription>
           <CardAction>
-            <InviteMemberSheet />
+            <InviteMemberSheetDrawer />
           </CardAction>
         </CardHeader>
         <CardContent>
