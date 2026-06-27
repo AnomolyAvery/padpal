@@ -10,6 +10,7 @@ import {
 } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import { landingMetadata } from "@/lib/metadata";
+import { ThemeToggle } from "@/components/elements/theme-toggle";
 
 export const metadata: Metadata = landingMetadata;
 
@@ -22,6 +23,7 @@ export default async function Home() {
       <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
         <span className="text-lg font-semibold tracking-tight">PadPal</span>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           {session ? (
             <Button asChild size="sm" className="rounded-full">
               <Link href="/dashboard">Go to dashboard</Link>
