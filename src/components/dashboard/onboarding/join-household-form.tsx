@@ -16,7 +16,7 @@ export function JoinHouseholdForm({ inviteCode }: JoinHouseholdFormProps) {
     defaultValues: {
       inviteCode: inviteCode ?? "",
     },
-    onSubmit: async ({ value }) => {
+    onSubmit: async ({ value, formApi }) => {
       const { data, error } = await authClient.organization.acceptInvitation({
         invitationId: value.inviteCode,
       });
@@ -25,6 +25,8 @@ export function JoinHouseholdForm({ inviteCode }: JoinHouseholdFormProps) {
         toast.error("Failed to join household!", {
           description: error.message,
         });
+
+        formApi.resetField("inviteCode");
         return;
       }
 
@@ -35,6 +37,8 @@ export function JoinHouseholdForm({ inviteCode }: JoinHouseholdFormProps) {
       toast.success("Joined household successfully!", {
         description: "Redirecting to dashboard...",
       });
+
+      await new Promise((res) => setTimeout(res, 1000));
 
       router.push("/dashboard");
     },

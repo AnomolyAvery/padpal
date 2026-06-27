@@ -8,19 +8,30 @@ import {
 import { DashboardUser } from "./dashboard-user";
 import { DashboardNavMain, DashboardNavSecondary } from "./dashboard-nav";
 import { HouseholdSwitcher } from "./household-switcher";
+import type { User } from "better-auth";
+import type { Organization } from "better-auth/plugins/organization";
 
-export function DashboardSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
+interface DashboardSidebarProps extends ComponentProps<typeof Sidebar> {
+  user: User;
+  org: Organization;
+}
+
+export function DashboardSidebar({
+  user,
+  org,
+  ...props
+}: DashboardSidebarProps) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
-        <HouseholdSwitcher />
+        <HouseholdSwitcher active={org} />
       </SidebarHeader>
       <SidebarContent>
         <DashboardNavMain />
         <DashboardNavSecondary className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <DashboardUser />
+        <DashboardUser user={user} />
       </SidebarFooter>
     </Sidebar>
   );

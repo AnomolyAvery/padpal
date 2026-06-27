@@ -35,6 +35,9 @@ export function CreateHouseholdForm() {
       toast.success("Household created!", {
         description: `Successfully created '${data.name}'. Redirecting to dashboard...`,
       });
+
+      await new Promise((res) => setTimeout(res, 1000));
+
       router.push("/dashboard");
     },
   });

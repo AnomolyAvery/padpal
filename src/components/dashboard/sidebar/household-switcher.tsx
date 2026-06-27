@@ -17,11 +17,14 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/server/better-auth/client";
 import { IconChevronDown, IconPlus } from "@tabler/icons-react";
+import type { Organization } from "better-auth/plugins/organization";
 import Link from "next/link";
 
-export function HouseholdSwitcher() {
+interface HouseholdSwitcherProps {
+  active: Organization;
+}
+export function HouseholdSwitcher({ active }: HouseholdSwitcherProps) {
   const { isPending } = authClient.useSession();
-  const { data: active } = authClient.useActiveOrganization();
   const { data: households } = authClient.useListOrganizations();
   const { isMobile } = useSidebar();
 
@@ -40,8 +43,6 @@ export function HouseholdSwitcher() {
       </SidebarMenu>
     );
   }
-
-  if (!active) return null;
 
   return (
     <SidebarMenu>
