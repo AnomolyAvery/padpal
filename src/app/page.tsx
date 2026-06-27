@@ -8,6 +8,10 @@ import {
   IconKey,
   IconUserPlus,
 } from "@tabler/icons-react";
+import type { Metadata } from "next";
+import { landingMetadata } from "@/lib/metadata";
+
+export const metadata: Metadata = landingMetadata;
 
 export default async function Home() {
   const session = await getSession();

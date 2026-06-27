@@ -8,14 +8,11 @@ import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import { baseMetadata } from "@/lib/metadata";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
-export const metadata: Metadata = {
-  title: "PadPal",
-  description: "Rental helper app thing",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
-};
+export const metadata: Metadata = baseMetadata;
 
 const geist = Geist({
   subsets: ["latin"],

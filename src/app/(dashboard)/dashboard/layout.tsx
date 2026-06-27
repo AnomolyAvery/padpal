@@ -1,6 +1,10 @@
 import { DashboardSidebar } from "@/components/dashboard/sidebar/dashboard-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { dashboardMetadata } from "@/lib/metadata";
+import type { Metadata } from "next";
 import type { CSSProperties, ReactNode } from "react";
+
+export const metadata: Metadata = dashboardMetadata;
 
 interface DashboardLayoutProps {
   children: ReactNode;
