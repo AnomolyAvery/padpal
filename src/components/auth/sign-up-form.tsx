@@ -70,15 +70,15 @@ export function SignUpForm() {
       >
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
-            <a
-              href="#"
+            <Link
+              href="/"
               className="flex flex-col items-center gap-2 font-medium"
             >
               <div className="flex size-8 items-center justify-center rounded-md">
                 <IconHomeDollar className="size-6" />
               </div>
               <span className="sr-only">PadPal.</span>
-            </a>
+            </Link>
             <h1 className="text-xl font-bold">Welcome to PadPal.</h1>
             <FieldDescription>
               Already have an account? <Link href="/sign-in">Sign in</Link>

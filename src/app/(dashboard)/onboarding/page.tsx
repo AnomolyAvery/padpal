@@ -7,12 +7,14 @@ import Link from "next/link";
 
 interface PageProps {
   searchParams: Promise<{
-    mode: string;
+    mode?: string;
+    inviteCode?: string;
   }>;
 }
 export default async function Page({ searchParams }: PageProps) {
   const search = await searchParams;
   const mode = search.mode ?? "create";
+  const inviteCode = search.inviteCode;
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
@@ -37,7 +39,7 @@ export default async function Page({ searchParams }: PageProps) {
                 <CreateHouseholdForm />
               </TabsContent>
               <TabsContent value="join">
-                <JoinHouseholdForm />
+                <JoinHouseholdForm inviteCode={inviteCode} />
               </TabsContent>
               <TabsContent value="list">
                 <HouseholdList />

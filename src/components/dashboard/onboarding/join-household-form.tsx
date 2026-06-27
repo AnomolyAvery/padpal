@@ -6,12 +6,15 @@ import { authClient } from "@/server/better-auth/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export function JoinHouseholdForm() {
+interface JoinHouseholdFormProps {
+  inviteCode?: string;
+}
+export function JoinHouseholdForm({ inviteCode }: JoinHouseholdFormProps) {
   const router = useRouter();
 
   const form = useAppForm({
     defaultValues: {
-      inviteCode: "",
+      inviteCode: inviteCode ?? "",
     },
     onSubmit: async ({ value }) => {
       const { data, error } = await authClient.organization.acceptInvitation({
