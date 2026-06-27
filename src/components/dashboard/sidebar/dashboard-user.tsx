@@ -24,13 +24,34 @@ import {
   IconNotification,
   IconLogout,
 } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export function DashboardUser() {
   const { isMobile } = useSidebar();
 
-  const { data, isPending } = authClient.useSession();
+  const { data } = authClient.useSession();
 
-  if (isPending || !data) {
+  const router = useRouter();
+  function onSignout() {
+    authClient
+      .signOut()
+      .then(() => {
+        toast.success("Signed out successfully!", {
+          description: "Redirecting back to sign-in!",
+        });
+        router.push("/sign-in");
+      })
+      .catch((err: Error) => {
+        const msg =
+          err?.message ?? "An unknown error occurred. Please try again";
+        toast.error("Failed to sign out!", {
+          description: msg,
+        });
+      });
+  }
+
+  if (!data) {
     return null;
   }
 
@@ -100,7 +121,7 @@ export function DashboardUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem variant="destructive" onClick={onSignout}>
               <IconLogout />
               Log out
             </DropdownMenuItem>

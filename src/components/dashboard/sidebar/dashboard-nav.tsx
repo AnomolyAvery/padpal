@@ -73,7 +73,7 @@ export function DashboardNavMain() {
 const NAV_SECONDARY = [
   {
     name: "Settings",
-    href: "/dashboard/setttings",
+    href: "/dashboard/settings",
     icon: IconSettings,
   },
   {

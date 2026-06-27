@@ -1,14 +1,14 @@
 "use client";
 
 import { useAppForm } from "@/lib/forms";
-import { FieldGroup } from "../ui/field";
+import { FieldGroup } from "../../ui/field";
 import { authClient } from "@/server/better-auth/client";
 import { useState } from "react";
-import { Alert, AlertDescription } from "../ui/alert";
+import { Alert, AlertDescription } from "../../ui/alert";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export function OnboardingForm() {
+export function CreateHouseholdForm() {
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();

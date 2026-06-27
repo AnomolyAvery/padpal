@@ -1,21 +1,48 @@
-import { OnboardingForm } from "@/components/dashboard/onboarding-form";
+import { CreateHouseholdForm } from "@/components/dashboard/onboarding/create-household-form";
+import { HouseholdList } from "@/components/dashboard/onboarding/household-list";
+import { JoinHouseholdForm } from "@/components/dashboard/onboarding/join-household-form";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { IconHomeDollar } from "@tabler/icons-react";
+import Link from "next/link";
 
-export default function Page() {
+interface PageProps {
+  searchParams: Promise<{
+    mode: string;
+  }>;
+}
+export default async function Page({ searchParams }: PageProps) {
+  const search = await searchParams;
+  const mode = search.mode ?? "create";
+
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 md:justify-start">
-          <a href="#" className="flex items-center gap-2 font-medium">
+          <Link href="/" className="flex items-center gap-2 font-medium">
             <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
               <IconHomeDollar className="size-4" />
             </div>
             PadPal
-          </a>
+          </Link>
         </div>
-        <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-md">
-            <OnboardingForm />
+        <div className="flex h-full flex-1 items-center justify-center">
+          <div className="w-full max-w-md flex-1 space-y-6">
+            <Tabs defaultValue={mode} className="w-full space-y-6">
+              <TabsList>
+                <TabsTrigger value="create">Create</TabsTrigger>
+                <TabsTrigger value="join">Join</TabsTrigger>
+                <TabsTrigger value="list">My Households</TabsTrigger>
+              </TabsList>
+              <TabsContent value="create">
+                <CreateHouseholdForm />
+              </TabsContent>
+              <TabsContent value="join">
+                <JoinHouseholdForm />
+              </TabsContent>
+              <TabsContent value="list">
+                <HouseholdList />
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </div>

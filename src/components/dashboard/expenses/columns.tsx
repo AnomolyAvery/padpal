@@ -34,6 +34,10 @@ export const columns: ColumnDef<Expense>[] = [
   {
     accessorKey: "name",
     header: "Name",
+  },
+  {
+    accessorKey: "category",
+    header: "Category",
     cell: ({ row }) => {
       const expense = row.original;
       const expenseInfo = expenseCategoryMap[expense.category];
@@ -43,7 +47,7 @@ export const columns: ColumnDef<Expense>[] = [
           <TooltipTrigger>
             <div className="flex items-center gap-2">
               {expenseInfo && <expenseInfo.icon className="size-5" />}
-              <span>{expense.name}</span>
+              <span>{expenseInfo.name}</span>
             </div>
           </TooltipTrigger>
           {expenseInfo && (
@@ -64,6 +68,7 @@ export const columns: ColumnDef<Expense>[] = [
       );
     },
   },
+
   {
     accessorKey: "amount",
     header: "Amount",

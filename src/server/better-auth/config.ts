@@ -11,7 +11,11 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-  plugins: [organization()],
+  plugins: [
+    organization({
+      requireEmailVerificationOnInvitation: false,
+    }),
+  ],
 });
 
 export type Session = typeof auth.$Infer.Session;

@@ -17,7 +17,7 @@ export function ExpensesOverview() {
     <div className="grid gap-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <Card>
         <CardHeader>
-          <CardDescription>Total Spent</CardDescription>
+          <CardDescription>Total Spent (Household)</CardDescription>
 
           <CardTitle className="text-2xl font-semibold tabular-nums">
             {formatCurrency(overview.total)}

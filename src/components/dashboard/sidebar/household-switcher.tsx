@@ -1,5 +1,4 @@
 "use client";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -15,13 +14,32 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/server/better-auth/client";
 import { IconChevronDown, IconPlus } from "@tabler/icons-react";
+import Link from "next/link";
 
 export function HouseholdSwitcher() {
+  const { isPending } = authClient.useSession();
   const { data: active } = authClient.useActiveOrganization();
   const { data: households } = authClient.useListOrganizations();
   const { isMobile } = useSidebar();
+
+  if (isPending) {
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton size="lg" disabled>
+            <Skeleton className="size-8 rounded-full" />
+            <div className="grid flex-1 gap-1">
+              <Skeleton className="h-3 w-24" />
+              <Skeleton className="h-2.5 w-16" />
+            </div>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    );
+  }
 
   if (!active) return null;
 
@@ -70,13 +88,15 @@ export function HouseholdSwitcher() {
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2">
-              <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
-                <IconPlus className="size-4" />
-              </div>
-              <div className="text-muted-foreground font-medium">
-                Add household
-              </div>
+            <DropdownMenuItem className="gap-2 p-2" asChild>
+              <Link href={"/onboarding?mode=create"}>
+                <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
+                  <IconPlus className="size-4" />
+                </div>
+                <div className="text-muted-foreground font-medium">
+                  Add household
+                </div>
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
