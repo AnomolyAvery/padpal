@@ -53,7 +53,7 @@ export function ExpenseSheetDrawer({ expense, children }: ExpenseSheetProps) {
   }
 
   return (
-    <Drawer>
+    <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>{children}</DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>

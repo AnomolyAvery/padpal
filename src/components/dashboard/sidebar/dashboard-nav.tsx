@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   SidebarGroup,
@@ -5,6 +7,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   IconCirclePlusFilled,
@@ -31,6 +34,12 @@ const NAV_MAIN = [
 ];
 
 export function DashboardNavMain() {
+  const { setOpenMobile } = useSidebar();
+
+  function onLinkClick() {
+    setOpenMobile(false);
+  }
+
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -57,7 +66,7 @@ export function DashboardNavMain() {
           {NAV_MAIN.map((item) => (
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton tooltip={item.name} asChild>
-                <Link href={item.href}>
+                <Link href={item.href} onClick={onLinkClick}>
                   {item.icon && <item.icon />}
                   <span>{item.name}</span>
                 </Link>
@@ -86,6 +95,12 @@ const NAV_SECONDARY = [
 export function DashboardNavSecondary({
   ...props
 }: ComponentProps<typeof SidebarGroup>) {
+  const { setOpenMobile } = useSidebar();
+
+  function onLinkClick() {
+    setOpenMobile(false);
+  }
+
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>
@@ -93,7 +108,7 @@ export function DashboardNavSecondary({
           {NAV_SECONDARY.map((item) => (
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton asChild>
-                <Link href={item.href}>
+                <Link href={item.href} onClick={onLinkClick}>
                   <item.icon />
                   <span>{item.name}</span>
                 </Link>
