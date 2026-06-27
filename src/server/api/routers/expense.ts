@@ -91,6 +91,7 @@ export const expenseRouter = createTRPCRouter({
           amount: input.amount,
           isShared: input.isShared,
           category: input.category,
+          userId: !input.isShared ? ctx.session.userId : undefined,
         })
         .where(
           and(
