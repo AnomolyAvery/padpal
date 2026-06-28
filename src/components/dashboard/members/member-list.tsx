@@ -1,15 +1,5 @@
 "use client";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -36,10 +26,11 @@ import {
 import { cn } from "@/lib/utils";
 import { authClient } from "@/server/better-auth/client";
 import { IconDotsVertical, IconTrash, IconUsers } from "@tabler/icons-react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import type { Member } from "better-auth/plugins/organization";
 import { useState } from "react";
 import { toast } from "sonner";
+import { RemoveMemberDialog } from "./remove-member-dialog";
 
 const ROLE_LABELS: Record<string, string> = {
   owner: "Owner",
@@ -74,23 +65,6 @@ export function MemberList() {
   const { data: list, refetch: refetchList } = useQuery({
     queryKey: ["household", "members"],
     queryFn: () => authClient.organization.listMembers(),
-  });
-
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: (id: string) =>
-      authClient.organization.removeMember({
-        memberIdOrEmail: id,
-      }),
-    onSuccess: async () => {
-      toast.success("Member successfully removed");
-      setPendingRemoval(null);
-      await refetchList();
-    },
-    onError: (err) => {
-      toast.error("Failed to remove member!", {
-        description: err.message,
-      });
-    },
   });
 
   const members = list?.data?.members ?? [];
@@ -156,7 +130,7 @@ export function MemberList() {
                         <span className="sr-only">Member options</span>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
+                    <DropdownMenuContent align="end" className="min-w-64">
                       <DropdownMenuItem
                         disabled={
                           member.userId === session?.user.id ||
@@ -176,30 +150,19 @@ export function MemberList() {
           ))}
         </div>
       )}
-      <AlertDialog
-        open={!!pendingRemoval}
-        onOpenChange={(open) => !open && setPendingRemoval(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Remove member?</AlertDialogTitle>
-            <AlertDialogDescription>
-              <strong>{pendingRemoval?.user.name}</strong> will lose access to
-              this household. You can invite them again later.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              disabled={isPending}
-              onClick={() => pendingRemoval && mutateAsync(pendingRemoval.id)}
-            >
-              {isPending ? "Removing…" : "Remove"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+
+      <RemoveMemberDialog
+        member={pendingRemoval}
+        onClose={() => {
+          setPendingRemoval(null);
+          refetchList().catch((err: Error) => {
+            const msg = err?.message ?? "An unknown error occurred";
+            toast.error("Failed to fetch member list", {
+              description: msg,
+            });
+          });
+        }}
+      />
     </>
   );
 }

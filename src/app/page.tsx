@@ -6,11 +6,22 @@ import {
   IconCheck,
   IconCreditCard,
   IconKey,
+  IconLogin,
+  IconMenu2,
   IconUserPlus,
 } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import { landingMetadata } from "@/lib/metadata";
 import { ThemeToggle } from "@/components/elements/theme-toggle";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const metadata: Metadata = landingMetadata;
 
@@ -22,7 +33,7 @@ export default async function Home() {
       {/* Nav */}
       <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
         <span className="text-lg font-semibold tracking-tight">PadPal</span>
-        <div className="flex items-center gap-3">
+        <div className="hidden items-center gap-3 lg:flex">
           <ThemeToggle />
           {session ? (
             <Button asChild size="sm" className="rounded-full">
@@ -31,14 +42,56 @@ export default async function Home() {
           ) : (
             <>
               <Button asChild variant="ghost" size="sm">
-                <Link href="/sign-in">Sign in</Link>
+                <Link href="/sign-in">
+                  <IconLogin />
+                  Sign in
+                </Link>
               </Button>
               <Button asChild size="sm" className="rounded-full">
-                <Link href="/sign-up">Get started</Link>
+                <Link href="/sign-up">
+                  <IconUserPlus />
+                  Get started
+                </Link>
               </Button>
             </>
           )}
         </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant={"ghost"} className="lg:hidden">
+              <IconMenu2 />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>Account</DropdownMenuLabel>
+              {session ? (
+                <DropdownMenuItem asChild>
+                  <Link href={"/dashboard"}>Dashboard</Link>
+                </DropdownMenuItem>
+              ) : (
+                <>
+                  <DropdownMenuItem asChild>
+                    <Link href="/sign-in">
+                      <IconLogin />
+                      Sign in
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/sign-up">
+                      <IconUserPlus />
+                      Get started
+                    </Link>
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <ThemeToggle className="w-full" />
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </nav>
 
       {/* Hero */}

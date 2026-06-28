@@ -1,6 +1,6 @@
 import { createTRPCRouter, orgProtectedProcedure } from "../trpc";
-import { expenses } from "@/server/db/schema";
-import { and, desc, eq, or, sql } from "drizzle-orm";
+import { expenses, member } from "@/server/db/schema";
+import { and, count, desc, eq, getTableColumns, or, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import {
   createExpenseSchema,
@@ -11,6 +11,16 @@ import z from "zod";
 
 export const expenseRouter = createTRPCRouter({
   overview: orgProtectedProcedure.query(async ({ ctx }) => {
+    const { session } = ctx;
+
+    const memberCountSubQuery = ctx.db
+      .select({
+        count: count(),
+      })
+      .from(member)
+      .where(eq(member.organizationId, session.activeOrganizationId))
+      .limit(1);
+
     const [result] = await ctx.db
       .select({
         total: sql<number>`coalesce(sum(${expenses.amount}), 0)`,
@@ -18,15 +28,14 @@ export const expenseRouter = createTRPCRouter({
         average: sql<number>`coalesce(avg(${expenses.amount}), 0)`,
         largest: sql<number>`coalesce(max(${expenses.amount}), 0)`,
         sharedCount: sql<number>`count(case when ${expenses.isShared} = true then 1 end)`,
+        sharedTotal: sql<number>`coalesce(sum(case when ${expenses.isShared} = true then ${expenses.amount} end) / (${memberCountSubQuery}), 0)`,
+        memberCount: sql<number>`(${memberCountSubQuery})`,
       })
       .from(expenses)
       .where(
         and(
-          eq(expenses.orgId, ctx.session.activeOrganizationId),
-          or(
-            eq(expenses.userId, ctx.session.userId),
-            eq(expenses.isShared, true),
-          ),
+          eq(expenses.orgId, session.activeOrganizationId),
+          or(eq(expenses.userId, session.userId), eq(expenses.isShared, true)),
         ),
       )
       .limit(1);
@@ -46,14 +55,25 @@ export const expenseRouter = createTRPCRouter({
       const limit = 20;
       const offset = (input.page - 1) * limit;
 
+      const { session } = ctx;
+
+      const memberCountSubQuery = ctx.db
+        .select({ count: count() })
+        .from(member)
+        .where(eq(member.organizationId, session.activeOrganizationId))
+        .limit(1);
+
       const expenseList = await ctx.db
-        .select()
+        .select({
+          ...getTableColumns(expenses),
+          memberCount: sql<number>`(${memberCountSubQuery})`,
+        })
         .from(expenses)
         .where(
           and(
-            eq(expenses.orgId, ctx.session.activeOrganizationId),
+            eq(expenses.orgId, session.activeOrganizationId),
             or(
-              eq(expenses.userId, ctx.session.userId),
+              eq(expenses.userId, session.userId),
               eq(expenses.isShared, true),
             ),
           ),
@@ -62,7 +82,13 @@ export const expenseRouter = createTRPCRouter({
         .limit(limit)
         .offset(offset);
 
-      return expenseList;
+      return expenseList.map((e) => ({
+        ...e,
+        shareAmount:
+          e.isShared && e.memberCount > 1
+            ? e.amount / e.memberCount
+            : undefined,
+      }));
     }),
   create: orgProtectedProcedure
     .input(createExpenseSchema)

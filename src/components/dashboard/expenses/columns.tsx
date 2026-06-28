@@ -10,8 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Expense } from "@/server/db/schema";
-import { api } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import {
   IconDotsVertical,
   IconPencil,
@@ -29,6 +28,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { expenseCategoryMap } from "@/lib/expenses/category-map";
+
+type Expense = RouterOutputs["expense"]["list"][number];
 
 export const columns: ColumnDef<Expense>[] = [
   {
@@ -68,11 +69,17 @@ export const columns: ColumnDef<Expense>[] = [
       );
     },
   },
-
   {
     accessorKey: "amount",
     header: "Amount",
-    cell: ({ row }) => formatCurrency(row.original.amount),
+    cell: ({ row }) => {
+      const expense = row.original;
+      if (expense.shareAmount) {
+        return `${formatCurrency(expense.amount)} (${formatCurrency(expense.shareAmount)})`;
+      }
+
+      return formatCurrency(row.original.amount);
+    },
   },
   {
     accessorKey: "isShared",
