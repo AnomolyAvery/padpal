@@ -17,12 +17,12 @@ export function ExpensesOverview() {
         <CardHeader>
           <CardDescription>Total Spent</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums">
-            {formatCurrency(overview.total)}
+            {formatCurrency(overview.sharedTotal + overview.personalTotal)}
           </CardTitle>
         </CardHeader>
         <CardFooter>
           <div className="text-muted-foreground text-sm">
-            {overview.expenseCount} personal & household expenses
+            {overview.expenseCount} personal & shared household expenses
           </div>
         </CardFooter>
       </Card>
@@ -41,9 +41,9 @@ export function ExpensesOverview() {
       </Card>
       <Card>
         <CardHeader>
-          <CardDescription>Largest Expense</CardDescription>
+          <CardDescription>Total Personal Expense</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums">
-            {formatCurrency(overview.largest)}
+            {formatCurrency(overview.personalTotal)}
           </CardTitle>
         </CardHeader>
         <CardFooter>

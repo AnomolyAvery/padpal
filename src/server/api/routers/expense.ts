@@ -23,12 +23,12 @@ export const expenseRouter = createTRPCRouter({
 
     const [result] = await ctx.db
       .select({
-        total: sql<number>`coalesce(sum(${expenses.amount}), 0)`,
         expenseCount: sql<number>`count(*)`,
         average: sql<number>`coalesce(avg(${expenses.amount}), 0)`,
         largest: sql<number>`coalesce(max(${expenses.amount}), 0)`,
         sharedCount: sql<number>`count(case when ${expenses.isShared} = true then 1 end)`,
         sharedTotal: sql<number>`coalesce(sum(case when ${expenses.isShared} = true then ${expenses.amount} end) / (${memberCountSubQuery}), 0)`,
+        personalTotal: sql<number>`coalesce(sum(case when ${expenses.isShared} = false then ${expenses.amount} end), 0)`,
         memberCount: sql<number>`(${memberCountSubQuery})`,
       })
       .from(expenses)
