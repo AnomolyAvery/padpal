@@ -11,13 +11,16 @@ import { api } from "@/trpc/react";
 
 export function ExpensesOverview() {
   const [overview] = api.expense.overview.useSuspenseQuery();
+
+  const total = overview.sharedTotal + overview.personalTotal;
+
   return (
     <div className="grid gap-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <Card>
         <CardHeader>
           <CardDescription>Total Spent</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums">
-            {formatCurrency(overview.sharedTotal + overview.personalTotal)}
+            {formatCurrency(total)}
           </CardTitle>
         </CardHeader>
         <CardFooter>
